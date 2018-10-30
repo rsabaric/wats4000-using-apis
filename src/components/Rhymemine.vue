@@ -1,12 +1,12 @@
 <template>
-  <div class="rhymesaurus">
+  <div class="rhyme-mine">
    <p)
     <router-link v-bind:to="{ name: 'RhymeMine' }">Rhyme Mine</router-link>
     &bull;
     <router-link v-bind:to="{ name: 'Rhymesaurus' }">Rhymesaures</router-link>
    </p>
     <form v-on:submit.prevent="findWords">
-      <p>Find rhymes for <input type="text" v-model="rhyme"> related to <input type="text" v-model="phrase"> <button type="submit">Search</button></p>
+      <p>Find words that are frequently before: <input type="text" v-model="rhyme">  <button type="submit">Search</button></p>
     </form>
     <ul v-if="results && results.length>0" class="results">
       <li v-for="item in results" class="item">
@@ -14,14 +14,10 @@
         <p>{{ item.score }}</p>
       </li>
     </ul>
-
-    <!-- TODO: Add a `v-else-if` conditional to make this message only show if there are no results returned (but we have actually attempted a request). -->
     <div v-else-if="results && results.length ===0" class="no-results">
       <h2>No Words Found</h2>
       <p>Please adjust your search to find more words.</p>
     </div>
-
-    <!-- TODO: Add a v-if conditional to make this errors list show only if there are errors and if the length is greater than 0. -->
     <ul v-if="errors.length>0" class="errors">
       <li v-for="error in errors">
       {{ error.message }}
@@ -35,7 +31,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'Rhymesaurus',
+  name: 'RhymeMine',
   data () {
     return {
       results: null,
@@ -48,8 +44,7 @@ methods: {
   findWords: function(){
     axios.get('https://api.datamuse.com/words', {
       params: {
-        ml: this.phrase,
-        rel_rhy: this.rhyme
+        rel_bgb: this.rhyme
       }
     })
     .then(response => {
@@ -65,7 +60,7 @@ methods: {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.rhymesaurus {
+.rhyme-mine {
   font-size: 1.4rem;
 }
 
