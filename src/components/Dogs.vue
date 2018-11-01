@@ -7,24 +7,22 @@
     &bull;
     <router-link v-bind:to="{ name: 'Dogs' }">Dogs</router-link>
    </p>
-    <form v-on:submit.prevent="findWords">
-      <p>Find words that are frequently before: <input type="text" v-model="rhyme">  <button type="submit">Search</button></p>
+        <label for="petChooser">Pick a dog breed:</label>
+    <select v-model="dogSelection">
+      <option disabled value="">Please select one</option>
+      <option v-for="(value, key) in posts.message" v-bind:value="key">{{ key }}</option>
+    </select>
+    <form v-on:submit.prevent="getDog">
+      <p><button type="submit">Get Dog</button></p>
     </form>
-    <ul v-if="results && results.length>0" class="results">
-      <li v-for="item in results" class="item">
-        <p><strong>{{ item.word }}</strong></p>
-        <p>{{ item.score }}</p>
-      </li>
-    </ul>
-    <div v-else-if="results && results.length ===0" class="no-results">
-      <h2>No Words Found</h2>
-      <p>Please adjust your search to find more words.</p>
-    </div>
+    <p> {{ dogSelection }} </p>
     <ul v-if="errors.length>0" class="errors">
       <li v-for="error in errors">
       {{ error.message }}
       </li>
     </ul>
+    <p> {{results.message[0]}} </p>
+    <img src="https://www.w3schools.com/images/w3schools_green.jpg">
   </div>
 </template>
 
@@ -39,16 +37,16 @@ export default {
       results: null,
       errors: [],
       phrase: '',
-      rhyme: ''
+      rhyme: '',
+      posts: null,
+      dogSelection: null,
+      dogUrl:''
     }
   },
 methods: {
-  findWords: function(){
-    axios.get('https://api.datamuse.com/words', {
-      params: {
-        rel_bgb: this.rhyme
-      }
-    })
+
+  getDog: function(){
+    axios.get('https://dog.ceo/api/breed/'+this.dogSelection+'/images')
     .then(response => {
       this.results = response.data;
     })
@@ -56,7 +54,16 @@ methods: {
       this.errors.push(error);
     });
   }
-}
+},
+created () {
+    axios.get(`https://dog.ceo/api/breeds/list/all`)
+    .then(response => {
+      this.posts = response.data
+    })
+    .catch(e => {
+      this.errors.push(e)
+    })
+  }
 }
 </script>
 
