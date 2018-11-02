@@ -5,24 +5,25 @@
     &bull;
     <router-link v-bind:to="{ name: 'Rhymesaurus' }">Rhymesaures</router-link>
     &bull;
-    <router-link v-bind:to="{ name: 'Dogs' }">Dogs</router-link>
+    <router-link v-bind:to="{ name: 'Dogs' }">Dog Photo Finder</router-link>
    </p>
         <label for="petChooser">Pick a dog breed:</label>
     <select v-model="dogSelection">
       <option disabled value="">Please select one</option>
       <option v-for="(value, key) in posts.message" v-bind:value="key">{{ key }}</option>
     </select>
-    <form v-on:submit.prevent="getDog">
-      <p><button type="submit">Get Dog</button></p>
+    <form v-if="dogSelection" v-on:submit.prevent="getDog">
+      <p><button type="submit">Get a random {{dogSelection }} photo</button></p>
+      <p v-if="dogUrls">keep clicking for more random {{dogSelection}} photos</p>
     </form>
-    <p> {{ dogSelection }} </p>
     <ul v-if="errors.length>0" class="errors">
       <li v-for="error in errors">
       {{ error.message }}
       </li>
     </ul>
-    <p> {{results.message[0]}} </p>
-    <img src="https://www.w3schools.com/images/w3schools_green.jpg">
+    <ul v-if="results">
+    <img v-bind:src="dogPic" class="dogImg" v-on:click="getDog">
+    </ul>
   </div>
 </template>
 
@@ -31,7 +32,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'RhymeMine',
+  name: 'Dogs',
   data () {
     return {
       results: null,
@@ -40,7 +41,9 @@ export default {
       rhyme: '',
       posts: null,
       dogSelection: null,
-      dogUrl:''
+      dogUrls:'',
+      dogPic:'',
+      photoIndex: 0
     }
   },
 methods: {
@@ -49,6 +52,10 @@ methods: {
     axios.get('https://dog.ceo/api/breed/'+this.dogSelection+'/images')
     .then(response => {
       this.results = response.data;
+      this.dogUrls = response.data.message;
+      this.photoIndex = Math.floor(Math.random()*this.dogUrls.length);
+      this.dogPic = this.dogUrls[this.photoIndex];
+
     })
     .catch(error => {
       this.errors.push(error);
@@ -125,5 +132,10 @@ ul.errors {
 
 a {
   color: #42b983;
+}
+.dogImg {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
 }
 </style>

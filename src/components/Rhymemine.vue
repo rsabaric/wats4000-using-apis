@@ -5,7 +5,7 @@
     &bull;
     <router-link v-bind:to="{ name: 'Rhymesaurus' }">Rhymesaures</router-link>
     &bull;
-    <router-link v-bind:to="{ name: 'Dogs' }">Dogs</router-link>
+    <router-link v-bind:to="{ name: 'Dogs' }">Dog Photo Finder</router-link>
    </p>
     <form v-on:submit.prevent="findWords">
       <p>Find words that are frequently before: <input type="text" v-model="rhyme">  <button type="submit">Search</button></p>
