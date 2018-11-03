@@ -22,7 +22,13 @@
       </li>
     </ul>
     <ul v-if="results">
-    <img v-bind:src="dogPic" class="dogImg" v-on:click="getDog">
+      <img v-bind:src="dogPic" class="dogImg" v-on:click="getDog">
+        <ul class = "likebar">
+          <button v-on:click="likelist.push({dog: dogSelection,link:dogPic}), likedIndex++"> Like Dog </button>
+          <ul v-for="item in likelist">
+          <a v-bind:href="item.link" target="_blank"> Liked Dog: {{item.dog}} </a>
+        </ul>
+      </ul>
     </ul>
   </div>
 </template>
@@ -43,7 +49,8 @@ export default {
       dogSelection: null,
       dogUrls:'',
       dogPic:'',
-      photoIndex: 0
+      photoIndex: 0,
+      likelist:[]
     }
   },
 methods: {
