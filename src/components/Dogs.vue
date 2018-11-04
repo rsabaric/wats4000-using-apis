@@ -8,7 +8,7 @@
     <router-link v-bind:to="{ name: 'Dogs' }">Dog Photo Finder</router-link>
    </p>
         <label for="petChooser">Pick a dog breed:</label>
-    <select v-model="dogSelection">
+    <select v-model="dogSelection" v-on:change="results=null">
       <option disabled value="">Please select one</option>
       <option v-for="(value, key) in posts.message" v-bind:value="key">{{ key }}</option>
     </select>
@@ -24,11 +24,16 @@
     <ul v-if="results">
       <img v-bind:src="dogPic" class="dogImg" v-on:click="getDog">
         <ul class = "likebar">
-          <button v-on:click="likelist.push({dog: dogSelection,link:dogPic}), likedIndex++"> Like Dog </button>
-          <ul v-for="item in likelist">
-          <a v-bind:href="item.link" target="_blank"> Liked Dog: {{item.dog}} </a>
+          <button v-on:click="likelist.push({dog: dogSelection,link:dogPic, comment:dogComment}), dogComment=''"> Like Dog </button>
+          <input type="text" v-model="dogComment" placeholder="Add Optional Comment Here"></input>
         </ul>
-      </ul>
+    </ul>
+    <h3 v-if="likelist.length>0">My Favorite Dogs:</h3>
+    <ul v-for="item in likelist" class="likeHistory">
+      <li class="likeHistoryelement">
+        <a v-bind:href="item.link" target="_blank"> {{item.dog}} </a>
+        <span v-if="item.comment">"{{item.comment}}"</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -50,7 +55,8 @@ export default {
       dogUrls:'',
       dogPic:'',
       photoIndex: 0,
-      likelist:[]
+      likelist:[],
+      dogComment:''
     }
   },
 methods: {
@@ -144,5 +150,11 @@ a {
     max-width: 100%;
     height: auto;
     cursor: pointer;
+}
+.likeHistory {
+  display: block;
+}
+.likeHistoryelement{
+  display: inline-block
 }
 </style>
