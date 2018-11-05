@@ -14,27 +14,29 @@
     </select>
     <form v-if="dogSelection" v-on:submit.prevent="getDog">
       <p><button type="submit">Get a random {{dogSelection }} photo</button></p>
-      <p v-if="dogUrls">keep clicking for more random {{dogSelection}} photos</p>
     </form>
     <ul v-if="errors.length>0" class="errors">
       <li v-for="error in errors">
       {{ error.message }}
       </li>
     </ul>
-    <ul v-if="results">
+    <ul v-if="results" class="photobox">
+      <p v-if="dogUrls">keep clicking for more random {{dogSelection}} photos</p>
       <img v-bind:src="dogPic" class="dogImg" v-on:click="getDog">
         <ul class = "likebar">
+          <input v-on:keyup.enter="likelist.push({dog: dogSelection,link:dogPic, comment:dogComment}), dogComment=''" type="text" v-model="dogComment" placeholder="Add Optional Comment Here"></input>
           <button v-on:click="likelist.push({dog: dogSelection,link:dogPic, comment:dogComment}), dogComment=''"> Like Dog </button>
-          <input type="text" v-model="dogComment" placeholder="Add Optional Comment Here"></input>
         </ul>
     </ul>
-    <h3 v-if="likelist.length>0">My Favorite Dogs:</h3>
-    <ul v-for="item in likelist" class="likeHistory">
-      <li class="likeHistoryelement">
-        <a v-bind:href="item.link" target="_blank"> {{item.dog}} </a>
-        <span v-if="item.comment">"{{item.comment}}"</span>
-      </li>
-    </ul>
+    <div class = "liked">
+      <h3 v-if="likelist.length>0">My Favorite Dogs:</h3>
+      <ul v-for="item in likelist" class="likeHistory">
+        <li class="likeHistoryelement">
+          <a v-bind:href="item.link" target="_blank"> {{item.dog}} </a>
+          <span v-if="item.comment">"{{item.comment}}"</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -147,7 +149,7 @@ a {
   color: #42b983;
 }
 .dogImg {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     cursor: pointer;
 }
@@ -155,6 +157,17 @@ a {
   display: block;
 }
 .likeHistoryelement{
-  display: inline-block
+  display: inline-block;
+}
+.liked {
+  border: 1px solid black;
+  margin: 100px;
+}
+.likebar {
+  float: bottom;
+  padding: 10px;
+}
+.photobox{
+  margin: 100px;
 }
 </style>
